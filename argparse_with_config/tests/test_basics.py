@@ -9,10 +9,12 @@ def test_basic_creation():
     assert parser.config_argument_names == ["--config"]
 
 
-def create_parser():
+def create_parser(default_config: dict | None = None):
     from argparse_with_config import ArgumentParserWithConfig
 
-    parser = ArgumentParserWithConfig(config_argument_names=["-y", "--config"])
+    parser = ArgumentParserWithConfig(
+        config_argument_names=["-y", "--config"], default_config=default_config
+    )
     assert parser.config_argument_names == ["-y", "--config"]
 
     parser.add_argument("-b", "--bogus", type=int, default=5, help="bogus")
