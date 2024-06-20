@@ -208,6 +208,8 @@ today.
 
 Left:
 
-* more testing with other argparse features
-* support many more argparse sub-classes where needed
-* support reading multiple config types, including TOML
+* more testing with other `argparse` features
+* support many more `argparse` sub-classes where needed
+* support reading multiple config types, including `TOML` and maybe `json`
+* make `parse_args` return a super class of `Namespace` with a
+  `.config` attribute?
