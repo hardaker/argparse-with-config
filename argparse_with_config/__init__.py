@@ -4,7 +4,10 @@ from argparse import ArgumentParser
 
 
 class ArgumentParserWithConfig(ArgumentParser):
+    """A wrapper around argparse that reads configuration files."""
+
     def __init__(self, *args, **kwargs):
+        """Create a ArgumentParserWithConfig"""
         self._mappings = {}
         self._config = {}
 
@@ -16,10 +19,12 @@ class ArgumentParserWithConfig(ArgumentParser):
 
     @property
     def config(self):
+        """The configuration structure built."""
         return self._config
 
     @property
     def mappings(self):
+        """The list of built mappings from argument name to config path."""
         return self._mappings
 
     def get_argument_name(self, args):
