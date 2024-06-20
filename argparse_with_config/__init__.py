@@ -2,6 +2,8 @@
 
 from argparse import ArgumentParser, FileType
 from dotnest import DotNest
+from pathlib import Path
+import yaml
 
 __VERSION__ = "0.1"
 
@@ -101,6 +103,13 @@ class ArgumentParserWithConfig(ArgumentParser):
 
         super().add_argument(*args, **kwargs)
 
+    def deep_update(self, ref: dict, new_content: dict):
+        for key in new_content:
+            if key in ref and isinstance(ref[key], dict):
+                self.deep_update(ref[key], new_content[key])
+            else:
+                ref[key] = new_content[key]
+
     def parse_args(self, *args, **kwargs):
         """Calls parse_args but also stores resulting config."""
 
@@ -115,6 +124,18 @@ class ArgumentParserWithConfig(ArgumentParser):
                     n += 1
 
                     self.dotnest.set(left, right)
+
+            if arg in self.config_argument_names:
+                while n + 1 < len(base_args) and base_args[n + 1][0] != "-":
+                    filename = Path(base_args[n + 1])
+                    if not filename.exists():
+                        raise ValueError(f"file {filename} does not exist")
+
+                    contents = yaml.safe_load(filename.open())
+
+                    self.deep_update(self.dotnest.data, contents)
+
+                    n += 1
 
         # do the inverse mapping and get deep config settings and
         # create new defaults for parse_args
