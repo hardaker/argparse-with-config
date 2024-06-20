@@ -68,3 +68,16 @@ def test_argument_groupings_with_parent_path():
         "animals": {"dog": 15, "fake": {"unicorn": None}},
         "mymodule": {"zebra": "Marty"},
     }
+
+    # add another grouper with a different panth
+    grouper = parser.add_argument_group("subgroup", config_path="flintstones")
+    grouper.add_argument("-p", "--pet", default="Dino", config_path="their_pet")
+
+    parser.parse_args(["-b", "30", "-z", "Marty"])
+    assert parser.config == {
+        "bogus": 30,
+        "kitty": 10,
+        "animals": {"dog": 15, "fake": {"unicorn": None}},
+        "mymodule": {"zebra": "Marty"},
+        "flintstones": {"their_pet": "Dino"},
+    }
