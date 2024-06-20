@@ -3,6 +3,8 @@
 from argparse import ArgumentParser
 from dotnest import DotNest
 
+__VERSION__ = "0.1"
+
 
 class ArgumentParserWithConfig(ArgumentParser):
     """A wrapper around argparse that reads configuration files."""
