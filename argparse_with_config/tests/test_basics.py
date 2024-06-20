@@ -1,3 +1,6 @@
+from argparse import Namespace
+
+
 def test_basic_creation():
     from argparse_with_config import ArgumentParserWithConfig
 
@@ -14,12 +17,12 @@ def create_parser():
     assert parser.mappings == {"bogus": "bogus", "help": "help"}
 
     parser.add_argument(
-        "-c", "--cat", type=int, default=5, help="bogus", config_path="kitty"
+        "-c", "--cat", type=int, default=10, help="bogus", config_path="kitty"
     )
     assert parser.mappings == {"bogus": "bogus", "cat": "kitty", "help": "help"}
 
     parser.add_argument(
-        "-d", "--dog", type=int, default=5, help="bogus", config_path="animals.dog"
+        "-d", "--dog", type=int, default=15, help="bogus", config_path="animals.dog"
     )
     assert parser.mappings == {
         "bogus": "bogus",
@@ -27,8 +30,34 @@ def create_parser():
         "help": "help",
         "dog": "animals.dog",
     }
+
+    parser.add_argument(
+        "-u",
+        "--unicorn",
+        type=str,
+        help="does not exist",
+        config_path="animals.fake.unicorn",
+    )
+    assert parser.mappings == {
+        "bogus": "bogus",
+        "cat": "kitty",
+        "help": "help",
+        "dog": "animals.dog",
+        "unicorn": "animals.fake.unicorn",
+    }
+
     return parser
 
 
 def test_add_arguments():
+    create_parser()
     assert True
+
+
+def test_parse_basic():
+    parser = create_parser()
+    args = parser.parse_args([])
+    print(args)
+    print(args.cat)
+
+    assert args == Namespace(bogus=5, cat=10, dog=15, unicorn=None)

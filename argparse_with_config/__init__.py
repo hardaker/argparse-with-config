@@ -48,3 +48,5 @@ class ArgumentParserWithConfig(ArgumentParser):
             del kwargs["config_path"]
         else:
             self.mappings[name] = name
+
+        super().add_argument(*args, **kwargs)
