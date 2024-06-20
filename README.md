@@ -1,6 +1,6 @@
 # About
 
-The python `argparse` module is powerful but eventually apps can
+The python [argparse] module is powerful but eventually apps can
 easily accumulate a huge number of arguments that are a pain to
 specify every time.  Thus, the simple answer to that is to add a
 configuration file.  There are other python modules that try to merge
@@ -210,3 +210,4 @@ Left:
 
 * more testing with other argparse features
 * support many more argparse sub-classes where needed
+* support reading multiple config types, including TOML
