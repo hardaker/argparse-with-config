@@ -67,3 +67,16 @@ def test_parse_basic():
         "kitty": 10,
         "animals": {"dog": 15, "fake": {"unicorn": None}},
     }
+
+
+def test_with_arguments():
+    parser = create_parser()
+    args = parser.parse_args(["-b", "50", "-u", "Lady", "-d", "100"])
+
+    assert args == Namespace(bogus=50, cat=10, dog=100, unicorn="Lady")
+
+    assert parser.config == {
+        "bogus": 50,
+        "kitty": 10,
+        "animals": {"dog": 100, "fake": {"unicorn": "Lady"}},
+    }
