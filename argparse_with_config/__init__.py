@@ -1,21 +1,9 @@
 """A version (wrapper) of argparse that handles reading configuration files."""
 
-from argparse import ArgumentParser, FileType, _ArgumentGroup
+from argparse import ArgumentParser, FileType
 from dotnest import DotNest
 
 __VERSION__ = "0.1"
-
-
-class _ArgumentGroupWithConfig(_ArgumentGroup):
-    """A sub-group of arguments."""
-
-    def __init__(self, *args, **kwargs):
-        """A subgroup for arguments."""
-        print(args)
-        print(kwargs)
-        if "config_path" in kwargs:
-            del kwargs["config_path"]
-        super().__init__(*args, **kwargs)
 
 
 class ArgumentParserWithConfig(ArgumentParser):
