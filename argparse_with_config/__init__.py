@@ -12,6 +12,8 @@ class ArgumentParserWithConfig(ArgumentParser):
             self._mappings = kwargs["config_map"]
             del kwargs["config_map"]
 
+        super().__init__()
+
     @property
     def config(self):
         return self._config
