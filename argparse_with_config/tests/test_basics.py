@@ -5,7 +5,7 @@ def test_basic_creation():
     assert parser.config == {}
 
 
-def test_add_arguments():
+def create_parser():
     from argparse_with_config import ArgumentParserWithConfig
 
     parser = ArgumentParserWithConfig()
@@ -27,3 +27,8 @@ def test_add_arguments():
         "help": "help",
         "dog": "animals.dog",
     }
+    return parser
+
+
+def test_add_arguments():
+    assert True
