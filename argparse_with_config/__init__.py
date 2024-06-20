@@ -138,15 +138,21 @@ class ArgumentParserWithConfig(ArgumentParser):
 
     def add_argument_group(self, *args, **kwargs):
         """An argparse group that also handles config_path settings."""
-        # if "config_path" in kwargs:
-        #     del kwargs["config_path"]
+        parent_config_path = ""
+        if "config_path" in kwargs:
+            parent_config_path = kwargs["config_path"]
+            del kwargs["config_path"]
         argument_group = super().add_argument_group(*args, **kwargs)
 
         # TODO(hardaker): there must be a cleaner way to do this
 
         def replacement(*args, **kwargs):
             if "config_path" in kwargs:
-                self.mappings[self.get_argument_name(args)] = kwargs["config_path"]
+                argument_name = self.get_argument_name(args)
+                full_config_path = kwargs["config_path"]
+                if parent_config_path:
+                    full_config_path = parent_config_path + "." + full_config_path
+                self.mappings[argument_name] = full_config_path
                 del kwargs["config_path"]
             return argument_group.original_add_argument(*args, **kwargs)
 
