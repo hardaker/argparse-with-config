@@ -102,3 +102,99 @@ parser = ArgumentParserWithConfig()
     print(parser.config)
     # {'animals': {'dog': 'spot', 'kitty': 'mittens'}}
 ```
+
+# Use with configuration files
+
+By default, two new arguments will be added to the command line:
+
+* --config FILE...: loads configuration from a YAML configuration file
+* --set name=val:   Evaluates each expression for a left/right pair
+
+## Example configuration
+
+Consider this yaml file:
+
+``` yaml
+---
+bogus: 5000
+animals:
+    zebra: Marty
+silent:
+    ninja: deadly
+something:
+    wicked:
+        thisway: comes
+```
+
+And this code base:
+
+```python
+from argparse_with_config import ArgumentParserWithConfig
+parser = ArgumentParserWithConfig()
+
+group = parser.add_argument_group("animals", config_path="animals")
+
+group.add_argument(
+    "-d", "--dog", default="spike", help="bogus", config_path="dog"
+)
+
+group.add_argument(
+    "-c", "--cat", default="mittens", help="cat name", config_path="kitty"
+)
+
+args = parser.parse_args(["-d", "goodboy", "--config", "test.yml"])
+
+print(parser.config)
+# {'animals': {'dog': 'goodboy', 'kitty': 'mittens'}}
+```
+
+## Command line options override configuration files
+
+Note that command line options **always** override configuration
+files, which are expected to be general defaults.  Ordering does not
+matter.  Thus, even though the --dog flag occurs before the --config
+flag, the --dog flag is given preference.
+
+```python
+from argparse_with_config import ArgumentParserWithConfig
+parser = ArgumentParserWithConfig()
+
+group = parser.add_argument_group("animals", config_path="animals")
+
+group.add_argument(
+    "-d", "--dog", default="spike", help="bogus", config_path="dog"
+)
+
+group.add_argument(
+    "-c", "--cat", default="mittens", help="cat name", config_path="kitty"
+)
+
+args = parser.parse_args(["--dog", "goodboy", "--config", "test.yml"])
+
+print(parser.config)
+# {'animals': {'dog': 'goodboy', 'kitty': 'mittens'}}
+```
+
+## Using command line --set-default expressions
+
+This also works with the `--set-default` flag:
+
+```python
+from argparse_with_config import ArgumentParserWithConfig
+parser = ArgumentParserWithConfig()
+
+group = parser.add_argument_group("animals", config_path="animals")
+
+group.add_argument(
+    "-d", "--dog", default="spike", help="bogus", config_path="dog"
+)
+
+group.add_argument(
+    "-c", "--cat", default="mittens", help="cat name", config_path="kitty"
+)
+
+args = parser.parse_args(["--set-default", "animals.cat=paws"])
+
+print(parser.config)
+# {'animals': {'kitty': 'paws', 'dog': 'spike'}}
+```
