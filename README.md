@@ -24,6 +24,7 @@ work, as do argument_groups.  More is likely needed beyond that.
 
 Just like standard argparse, but now there are some extra options:
 
+``` python
     from argparse_with_config import ArgumentParserWithConfig
     parser = ArgumentParserWithConfig()
 
@@ -42,6 +43,7 @@ Just like standard argparse, but now there are some extra options:
 
     print(parser.config)
     # {'dog': 'spot', 'kitty': 'mittens'}
+```
 
 Note how the config tokens are mapped from the additional config_path flag.
 
@@ -50,6 +52,7 @@ Note how the config tokens are mapped from the additional config_path flag.
 What's better is that you can have (endless) sub-dicts with a better
 structure to isolate needed components together:
 
+``` python
     from argparse_with_config import ArgumentParserWithConfig
     parser = ArgumentParserWithConfig()
 
@@ -68,6 +71,7 @@ structure to isolate needed components together:
 
     print(parser.config)
     # {'animals': {'dog': 'spot', 'kitty': 'mittens'}}
+```
 
 Note that the base Namespace is still the same, but the config now has
 a lot more structure to it.
@@ -79,6 +83,7 @@ The above is basically also equivalent to:
 from argparse_with_config import ArgumentParserWithConfig
 parser = ArgumentParserWithConfig()
 
+``` python
     group = parser.add_argument_group("animals", config_path="animals")
 
     group.add_argument(
@@ -96,3 +101,4 @@ parser = ArgumentParserWithConfig()
 
     print(parser.config)
     # {'animals': {'dog': 'spot', 'kitty': 'mittens'}}
+```
