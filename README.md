@@ -14,6 +14,8 @@ It is intended as a drop-in replacement (a super class) of `argparse`,
 but I have no doubt there are missing features.  Basic command options
 work, as do argument_groups.  More is likely needed beyond that.
 
+[argparse]: https://docs.python.org/3/library/argparse.html
+
 # Installation
 
     pip install argparse-with-config
