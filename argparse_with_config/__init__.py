@@ -21,3 +21,30 @@ class ArgumentParserWithConfig(ArgumentParser):
     @property
     def mappings(self):
         return self._mappings
+
+    def get_argument_name(self, args):
+        """Finds the argument to use for creating a variable name."""
+        # TODO(hardaker): pull this from a parent implementation
+
+        for arg in args:
+            if arg.startswith("--"):
+                arg = arg[2:].replace("-", "_")
+                return arg
+
+        # if no double args, use a single
+        for arg in args:
+            if arg.startswith("-"):
+                arg = arg[1:].replace("-", "_")
+                return arg
+
+        return None
+
+    def add_argument(self, *args, **kwargs):
+        """Add an argument to parse from options."""
+        name = self.get_argument_name(args)
+
+        if "config_path" in kwargs:
+            self.mappings[name] = kwargs["config_path"]
+            del kwargs["config_path"]
+        else:
+            self.mappings[name] = name
