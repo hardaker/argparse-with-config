@@ -61,7 +61,7 @@ def test_parse_basic():
     args = parser.parse_args([])
 
     assert args == Namespace(
-        config=None, set=None, bogus=5, cat=10, dog=15, unicorn=None
+        config=None, set_default=None, bogus=5, cat=10, dog=15, unicorn=None
     )
 
     assert parser.config == {
@@ -76,7 +76,7 @@ def test_with_arguments():
     args = parser.parse_args(["-b", "50", "-u", "Lady", "-d", "100"])
 
     assert args == Namespace(
-        config=None, set=None, bogus=50, cat=10, dog=100, unicorn="Lady"
+        config=None, set_default=None, bogus=50, cat=10, dog=100, unicorn="Lady"
     )
 
     assert parser.config == {
@@ -90,7 +90,7 @@ def test_with_set():
     parser = create_parser()
     sets = ["kitty=505", "animals.fake.unicorn=ConeHead"]
 
-    parser.parse_args(["--set", *sets])
+    parser.parse_args(["--set-default", *sets])
 
     # assert args == Namespace(
     #     config=None, set=sets, bogus=50, cat=50, dog=100, unicorn="ConeHead"
@@ -110,7 +110,7 @@ def test_with_set_no_arguments():
     # command line flags (aka the dragon)
     sets = ["kitty=505", "animals.fake.dragon=Smaug"]
 
-    parser.parse_args(["--set", *sets])
+    parser.parse_args(["--set-default", *sets])
 
     # assert args == Namespace(
     #     config=None, set=sets, bogus=50, cat=50, dog=100, unicorn="ConeHead"

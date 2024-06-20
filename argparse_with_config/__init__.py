@@ -12,7 +12,7 @@ class ArgumentParserWithConfig(ArgumentParser):
     """A wrapper around argparse that reads configuration files."""
 
     default_config_argument_names = ["--config"]
-    default_set_config_argument_names = ["--set"]
+    default_set_config_argument_names = ["--set-default"]
 
     def __init__(self, *args, **kwargs):
         """Create a ArgumentParserWithConfig"""
