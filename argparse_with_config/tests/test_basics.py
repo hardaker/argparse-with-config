@@ -17,3 +17,13 @@ def test_add_arguments():
         "-c", "--cat", type=int, default=5, help="bogus", config_path="kitty"
     )
     assert parser.mappings == {"bogus": "bogus", "cat": "kitty", "help": "help"}
+
+    parser.add_argument(
+        "-d", "--dog", type=int, default=5, help="bogus", config_path="animals.dog"
+    )
+    assert parser.mappings == {
+        "bogus": "bogus",
+        "cat": "kitty",
+        "help": "help",
+        "dog": "animals.dog",
+    }
