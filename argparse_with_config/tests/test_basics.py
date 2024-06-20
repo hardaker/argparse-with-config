@@ -12,8 +12,8 @@ def test_basic_creation():
 def create_parser():
     from argparse_with_config import ArgumentParserWithConfig
 
-    parser = ArgumentParserWithConfig(config_argument_names=["-z", "--config"])
-    assert parser.config_argument_names == ["-z", "--config"]
+    parser = ArgumentParserWithConfig(config_argument_names=["-y", "--config"])
+    assert parser.config_argument_names == ["-y", "--config"]
 
     parser.add_argument("-b", "--bogus", type=int, default=5, help="bogus")
     assert parser.mappings == {"bogus": "bogus", "help": "help"}

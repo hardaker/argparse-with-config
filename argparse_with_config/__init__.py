@@ -1,9 +1,21 @@
 """A version (wrapper) of argparse that handles reading configuration files."""
 
-from argparse import ArgumentParser, FileType
+from argparse import ArgumentParser, FileType, _ArgumentGroup
 from dotnest import DotNest
 
 __VERSION__ = "0.1"
+
+
+class _ArgumentGroupWithConfig(_ArgumentGroup):
+    """A sub-group of arguments."""
+
+    def __init__(self, *args, **kwargs):
+        """A subgroup for arguments."""
+        print(args)
+        print(kwargs)
+        if "config_path" in kwargs:
+            del kwargs["config_path"]
+        super().__init__(*args, **kwargs)
 
 
 class ArgumentParserWithConfig(ArgumentParser):
@@ -135,3 +147,21 @@ class ArgumentParserWithConfig(ArgumentParser):
                 self.dotnest.set(self.mappings[key], value)
 
         return results
+
+    def add_argument_group(self, *args, **kwargs):
+        """An argparse group that also handles config_path settings."""
+        # if "config_path" in kwargs:
+        #     del kwargs["config_path"]
+        argument_group = super().add_argument_group(*args, **kwargs)
+
+        # TODO(hardaker): there must be a cleaner way to do this
+
+        def replacement(*args, **kwargs):
+            if "config_path" in kwargs:
+                self.mappings[self.get_argument_name(args)] = kwargs["config_path"]
+                del kwargs["config_path"]
+            return argument_group.original_add_argument(*args, **kwargs)
+
+        argument_group.original_add_argument = argument_group.add_argument
+        argument_group.add_argument = replacement
+        return argument_group
