@@ -1,6 +1,6 @@
 """A version (wrapper) of argparse that handles reading configuration files."""
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, FileType
 from dotnest import DotNest
 
 __VERSION__ = "0.1"
@@ -10,12 +10,14 @@ class ArgumentParserWithConfig(ArgumentParser):
     """A wrapper around argparse that reads configuration files."""
 
     default_config_argument_names = ["--config"]
+    default_set_config_argument_names = ["--set"]
 
     def __init__(self, *args, **kwargs):
         """Create a ArgumentParserWithConfig"""
         self._mappings = {}
         self._config = {}
         self._config_argument_names = self.default_config_argument_names
+        self._set_config_argument_names = self.default_set_config_argument_names
         self.dotnest = DotNest({}, allow_creation=True)
 
         if "config_map" in kwargs:
@@ -27,6 +29,23 @@ class ArgumentParserWithConfig(ArgumentParser):
             del kwargs["config_argument_names"]
 
         super().__init__()
+
+        # register our configuration flags
+        if self._config_argument_names:
+            self.add_argument(
+                *self._config_argument_names,
+                type=FileType("r"),
+                help="Configuration file to load",
+                config_path=None,
+            )
+
+        if self._set_config_argument_names:
+            self.add_argument(
+                *self._set_config_argument_names,
+                type=FileType("r"),
+                help="Configuration name=value settings to parse",
+                config_path=None,
+            )
 
     @property
     def config(self):
@@ -42,6 +61,11 @@ class ArgumentParserWithConfig(ArgumentParser):
     def config_argument_names(self):
         "The list of configuration file arguments to accept."
         return self._config_argument_names
+
+    @property
+    def set_config_argument_names(self):
+        "The list of configuration setting arguments to accept."
+        return self._set_config_argument_names
 
     def get_argument_name(self, args):
         """Finds the argument to use for creating a variable name."""
@@ -65,7 +89,9 @@ class ArgumentParserWithConfig(ArgumentParser):
         name = self.get_argument_name(args)
 
         if "config_path" in kwargs:
-            self.mappings[name] = kwargs["config_path"]
+            # allow an empty or None to avoid memorizing this
+            if kwargs["config_path"]:
+                self.mappings[name] = kwargs["config_path"]
             del kwargs["config_path"]
         else:
             self.mappings[name] = name

@@ -60,7 +60,9 @@ def test_parse_basic():
     parser = create_parser()
     args = parser.parse_args([])
 
-    assert args == Namespace(bogus=5, cat=10, dog=15, unicorn=None)
+    assert args == Namespace(
+        config=None, set=None, bogus=5, cat=10, dog=15, unicorn=None
+    )
 
     assert parser.config == {
         "bogus": 5,
@@ -73,7 +75,9 @@ def test_with_arguments():
     parser = create_parser()
     args = parser.parse_args(["-b", "50", "-u", "Lady", "-d", "100"])
 
-    assert args == Namespace(bogus=50, cat=10, dog=100, unicorn="Lady")
+    assert args == Namespace(
+        config=None, set=None, bogus=50, cat=10, dog=100, unicorn="Lady"
+    )
 
     assert parser.config == {
         "bogus": 50,
