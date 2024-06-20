@@ -120,19 +120,21 @@ class ArgumentParserWithConfig(ArgumentParser):
 
         # first we read in --config and --set type arguments
         # TODO(hardaker): this would be better with "known config"
-        base_args = args[0]  # why is this a tuple?
-        for n, arg in enumerate(base_args):
+        real_args = args
+        if isinstance(args, tuple):
+            args = args[0]  # why is this sometimes a tuple?
+        for n, arg in enumerate(args):
             # handle --set like name=value arguments
             if arg in self.set_config_argument_names:
-                while n + 1 < len(base_args) and base_args[n + 1][0] != "-":
-                    (left, right) = base_args[n + 1].split("=")
+                while n + 1 < len(args) and args[n + 1][0] != "-":
+                    (left, right) = args[n + 1].split("=")
                     n += 1
 
                     self.dotnest.set(left, right)
 
             if arg in self.config_argument_names:
-                while n + 1 < len(base_args) and base_args[n + 1][0] != "-":
-                    filename = Path(base_args[n + 1])
+                while n + 1 < len(args) and args[n + 1][0] != "-":
+                    filename = Path(args[n + 1])
                     if not filename.exists():
                         raise ValueError(f"file {filename} does not exist")
 
@@ -154,7 +156,7 @@ class ArgumentParserWithConfig(ArgumentParser):
         self.set_defaults(**new_defaults)
 
         # call the parent parse_args
-        results = super().parse_args(*args, **kwargs)
+        results = super().parse_args(*real_args, **kwargs)
 
         for key, value in vars(results).items():
             if key in self.mappings:
