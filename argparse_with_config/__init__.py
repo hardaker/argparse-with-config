@@ -30,20 +30,23 @@ class ArgumentParserWithConfig(ArgumentParser):
 
         super().__init__()
 
-        # register our configuration flags
+        # register our configuration flags for files
         if self._config_argument_names:
             self.add_argument(
                 *self._config_argument_names,
                 type=FileType("r"),
                 help="Configuration file to load",
+                nargs="*",
                 config_path=None,
             )
 
+        # register our configuration flags for expressions
         if self._set_config_argument_names:
             self.add_argument(
                 *self._set_config_argument_names,
-                type=FileType("r"),
+                type=set,
                 help="Configuration name=value settings to parse",
+                nargs="*",
                 config_path=None,
             )
 
@@ -100,6 +103,31 @@ class ArgumentParserWithConfig(ArgumentParser):
 
     def parse_args(self, *args, **kwargs):
         """Calls parse_args but also stores resulting config."""
+
+        # first we read in --config and --set type arguments
+        # TODO(hardaker): this would be better with "known config"
+        base_args = args[0]  # why is this a tuple?
+        for n, arg in enumerate(base_args):
+            # handle --set like name=value arguments
+            if arg in self.set_config_argument_names:
+                while n + 1 < len(base_args) and base_args[n + 1][0] != "-":
+                    (left, right) = base_args[n + 1].split("=")
+                    n += 1
+
+                    self.dotnest.set(left, right)
+
+        # do the inverse mapping and get deep config settings and
+        # create new defaults for parse_args
+        new_defaults = {}
+        for key, value in self.mappings.items():
+            new_value = self.dotnest.get(value, return_none=True)
+            if new_value is not None:
+                new_defaults[key] = new_value
+
+        # update the original add_argument configuration defaults
+        self.set_defaults(**new_defaults)
+
+        # call the parent parse_args
         results = super().parse_args(*args, **kwargs)
 
         for key, value in vars(results).items():

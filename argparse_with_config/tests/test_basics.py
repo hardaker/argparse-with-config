@@ -84,3 +84,20 @@ def test_with_arguments():
         "kitty": 10,
         "animals": {"dog": 100, "fake": {"unicorn": "Lady"}},
     }
+
+
+def test_with_set():
+    parser = create_parser()
+    sets = ["kitty=505", "animals.fake.unicorn=ConeHead"]
+
+    parser.parse_args(["--set", *sets])
+
+    # assert args == Namespace(
+    #     config=None, set=sets, bogus=50, cat=50, dog=100, unicorn="ConeHead"
+    # )
+
+    assert parser.config == {
+        "bogus": 5,
+        "kitty": 505,
+        "animals": {"dog": 15, "fake": {"unicorn": "ConeHead"}},
+    }
