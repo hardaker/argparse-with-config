@@ -198,3 +198,13 @@ args = parser.parse_args(["--set-default", "animals.cat=paws"])
 print(parser.config)
 # {'animals': {'kitty': 'paws', 'dog': 'spike'}}
 ```
+
+# TODO
+
+There is a huge amount lef to do, but it is in a basic usable state
+today.
+
+Left:
+
+* more testing with other argparse features
+* support many more argparse sub-classes where needed
