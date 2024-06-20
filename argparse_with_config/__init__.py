@@ -1,6 +1,7 @@
 """A version (wrapper) of argparse that handles reading configuration files."""
 
 from argparse import ArgumentParser
+from dotnest import DotNest
 
 
 class ArgumentParserWithConfig(ArgumentParser):
@@ -13,6 +14,7 @@ class ArgumentParserWithConfig(ArgumentParser):
         self._mappings = {}
         self._config = {}
         self._config_argument_names = self.default_config_argument_names
+        self.dotnest = DotNest({}, allow_creation=True)
 
         if "config_map" in kwargs:
             self._mappings = kwargs["config_map"]
@@ -27,7 +29,7 @@ class ArgumentParserWithConfig(ArgumentParser):
     @property
     def config(self):
         """The configuration structure built."""
-        return self._config
+        return self.dotnest.data
 
     @property
     def mappings(self):
@@ -67,3 +69,13 @@ class ArgumentParserWithConfig(ArgumentParser):
             self.mappings[name] = name
 
         super().add_argument(*args, **kwargs)
+
+    def parse_args(self, *args, **kwargs):
+        """Calls parse_args but also stores resulting config."""
+        results = super().parse_args(*args, **kwargs)
+
+        for key, value in vars(results).items():
+            if key in self.mappings:
+                self.dotnest.set(self.mappings[key], value)
+
+        return results

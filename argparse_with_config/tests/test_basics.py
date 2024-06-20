@@ -59,7 +59,11 @@ def test_add_arguments():
 def test_parse_basic():
     parser = create_parser()
     args = parser.parse_args([])
-    print(args)
-    print(args.cat)
 
     assert args == Namespace(bogus=5, cat=10, dog=15, unicorn=None)
+
+    assert parser.config == {
+        "bogus": 5,
+        "kitty": 10,
+        "animals": {"dog": 15, "fake": {"unicorn": None}},
+    }
