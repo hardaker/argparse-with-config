@@ -101,3 +101,23 @@ def test_with_set():
         "kitty": 505,
         "animals": {"dog": 15, "fake": {"unicorn": "ConeHead"}},
     }
+
+
+def test_with_set_no_arguments():
+    parser = create_parser()
+
+    # we should allow creation of new things that doesn't have corresponding
+    # command line flags (aka the dragon)
+    sets = ["kitty=505", "animals.fake.dragon=Smaug"]
+
+    parser.parse_args(["--set", *sets])
+
+    # assert args == Namespace(
+    #     config=None, set=sets, bogus=50, cat=50, dog=100, unicorn="ConeHead"
+    # )
+
+    assert parser.config == {
+        "bogus": 5,
+        "kitty": 505,
+        "animals": {"dog": 15, "fake": {"unicorn": None, "dragon": "Smaug"}},
+    }
