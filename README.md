@@ -213,3 +213,12 @@ Left:
 * support reading multiple config types, including `TOML` and maybe `json`
 * make `parse_args` return a super class of `Namespace` with a
   `.config` attribute?
+* remove/fix some of the grosser hacks -- much is clean, but there are
+  a couple of nasty hacks.
+
+# Related packages
+
+* [argparse_config**: https://pypi.org/project/argparse_config/
+** Uses a generic config structure -- I wanted something much more
+complex at times.
+* (there was at least one more that I've lost track of)
