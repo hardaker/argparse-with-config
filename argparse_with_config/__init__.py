@@ -6,7 +6,7 @@ from dotnest import DotNest
 from pathlib import Path
 import yaml
 
-__VERSION__ = "0.1.3"
+__VERSION__ = "0.1.4"
 
 
 class ArgumentParserWithConfig(ArgumentParser):
