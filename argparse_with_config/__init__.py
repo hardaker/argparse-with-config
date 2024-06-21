@@ -1,5 +1,6 @@
 """A version (wrapper) of argparse that handles reading configuration files."""
 
+import sys
 from argparse import ArgumentParser, FileType
 from dotnest import DotNest
 from pathlib import Path
@@ -121,6 +122,8 @@ class ArgumentParserWithConfig(ArgumentParser):
         # first we read in --config and --set type arguments
         # TODO(hardaker): this would be better with "known config"
         real_args = args
+        if not args:
+            args = sys.argv
         if isinstance(args, tuple):
             args = args[0]  # why is this sometimes a tuple?
         for n, arg in enumerate(args):
@@ -148,6 +151,8 @@ class ArgumentParserWithConfig(ArgumentParser):
         # create new defaults for parse_args
         new_defaults = {}
         for key, value in self.mappings.items():
+            if not key or not value:
+                continue  # incase of accidental nulls
             new_value = self.dotnest.get(value, return_none=True)
             if new_value is not None:
                 new_defaults[key] = new_value
