@@ -144,7 +144,7 @@ class ArgumentParserWithConfig(ArgumentParser):
                     if not filename.exists():
                         raise ValueError(f"file {filename} does not exist")
 
-                    contents = yaml.safe_load(filename.open())
+                    contents = yaml.safe_load(filename.open("r"))
 
                     self.deep_update(self.dotnest.data, contents)
 
