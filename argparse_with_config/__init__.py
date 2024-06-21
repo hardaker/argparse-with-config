@@ -36,7 +36,7 @@ class ArgumentParserWithConfig(ArgumentParser):
                 self.dotnest.data = kwargs["default_config"]
             del kwargs["default_config"]
 
-        super().__init__()
+        super().__init__(*args, **kwargs)
 
         # register our configuration flags for files
         if self._config_argument_names:
