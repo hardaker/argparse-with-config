@@ -130,7 +130,10 @@ class ArgumentParserWithConfig(ArgumentParser):
             # handle --set like name=value arguments
             if arg in self.set_config_argument_names:
                 while n + 1 < len(args) and args[n + 1][0] != "-":
-                    (left, right) = args[n + 1].split("=")
+                    if "=" not in args[n + 1]:
+                        raise ValueError(f"invalid --set-default argument: {args[n+1]}")
+
+                    (left, right) = args[n + 1].split("=", maxsplit=1)
                     n += 1
 
                     self.dotnest.set(left, right)
