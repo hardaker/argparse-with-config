@@ -227,7 +227,7 @@ Left:
 
 # Related packages and information
 
-* [argparse_config**: https://pypi.org/project/argparse_config/
+* [argparse_config](https://pypi.org/project/argparse_config/)
 ** Uses a generic config structure -- I wanted something much more
 complex at times.
 * A useful stack overflow and [partial argument parsing]
