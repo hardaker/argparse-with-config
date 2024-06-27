@@ -16,6 +16,15 @@ work, as do argument_groups.  More is likely needed beyond that.
 
 [argparse]: https://docs.python.org/3/library/argparse.html
 
+## Important command line ordering philosophy
+
+Arguments are processed in the following order, regardless of ordering
+on the command line:
+
+1. defaults for the application
+2. configuration file (`--config`) loaded overriding defaults (`--set-default``)
+3. command line options are parsed, overriding both 1 and 2
+
 # Installation
 
     pip install argparse-with-config
@@ -216,9 +225,12 @@ Left:
 * remove/fix some of the grosser hacks -- much is clean, but there are
   a couple of nasty hacks.
 
-# Related packages
+# Related packages and information
 
 * [argparse_config**: https://pypi.org/project/argparse_config/
 ** Uses a generic config structure -- I wanted something much more
 complex at times.
+* A useful stack overflow and [partial argument parsing]
 * (there was at least one more that I've lost track of)
+
+[partial argument parsing]: https://stackoverflow.com/questions/3609852/which-is-the-best-way-to-allow-configuration-options-be-overridden-at-the-comman
